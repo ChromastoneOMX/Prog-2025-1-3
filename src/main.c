@@ -6,7 +6,7 @@
 #define BUFFER_SIZE 1024 // Tamanho máximo de uma palavra
 
 // Função para encontrar o mínimo entre três números
-int min(int a, int b, int c) {
+[[nodiscard]] int min(const int a, const int b, const int c) {
     if (a < b && a < c) {
         return a;
     }
@@ -16,9 +16,9 @@ int min(int a, int b, int c) {
     return c;
 }
 
-[[nodiscard]] int is_pontuation(char c) {
-    const char *pontuacoes = ".,!?;:'\"()[]{}<>-";
-    if (strchr(pontuacoes, c) != NULL) {
+[[nodiscard]] int is_pontuation(const char c) {
+    const char *ponctuation = ".,!?;:'\"()[]{}<>-";
+    if (strchr(ponctuation, c) != NULL) {
         return 1;
     }
     return 0;
@@ -42,8 +42,8 @@ void clean_string(char *str) {
 // Algoritmo pra medir a distancia entre duas strings por matrizes (fuzzy
 // search)
 int char_diff_tolerance(const char *s1, const char *s2) {
-    size_t len1 = strlen(s1);
-    size_t len2 = strlen(s2);
+    const size_t len1 = strlen(s1);
+    const size_t len2 = strlen(s2);
 
     if (len1 >= BUFFER_SIZE || len2 >= BUFFER_SIZE) {
         printf("Erro: A string é maior que o limite de %d caracteres.\n",
@@ -122,13 +122,12 @@ void run() {
 
     int tolerance = -1;
     printf("Insira a tolerancia de erro (0 para exata, 1 para mais tolerante)): \n>");
-   while (tolerance < 0 || tolerance > 1)  {
-       scanf("%d", &tolerance);
-       if (tolerance < 0 || tolerance > 1) {
-           printf("Por favor, digite novamente um valor que seja entre 0 e 1\n>");
-       }
-
-   }
+    while (tolerance < 0 || tolerance > 1) {
+        scanf("%d", &tolerance);
+        if (tolerance < 0 || tolerance > 1) {
+            printf("Por favor, digite novamente um valor que seja entre 0 e 1\n>");
+        }
+    }
     printf("tolerance: %d\n", tolerance);
 
     // Print nescessário do analizando arquivos
@@ -170,9 +169,13 @@ void run() {
 
             char file_path[BUFFER_SIZE];
             for (size_t i = 0; i <= strlen(directory->d_name) + strlen(folder) + 1; i++) {
-                if (i <= strlen(directory->d_name)) file_path[i] = folder[i];
-                else if (i == strlen(directory->d_name) + 1) file_path[i] = '\\';
-                else file_path[i] = txt_filename[i - strlen(directory->d_name) - 2];
+                if (i <= strlen(directory->d_name)) {
+                    file_path[i] = folder[i];
+                } else if (i == strlen(directory->d_name) + 1) {
+                    file_path[i] = '\\';
+                } else {
+                    file_path[i] = txt_filename[i - strlen(directory->d_name) - 2];
+                }
             }
 
             txt_filename[strlen(txt_filename)] = '\0';
