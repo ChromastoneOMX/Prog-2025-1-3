@@ -16,8 +16,8 @@
     return c;
 }
 
-[[nodiscard]] int is_pontuation(const char c) {
-    const char *ponctuation = ".,!?;:'\"()[]{}<>-";
+[[nodiscard]] int is_ponctuation(const char c) {
+    const char *ponctuation = "._$,!?;:'\"()[]{}<>-";
     if (strchr(ponctuation, c) != NULL) {
         return 1;
     }
@@ -30,7 +30,7 @@ void clean_string(char *str) {
     int reader = 0, writer = 0;
 
     while (str[reader] != '\0') {
-        if (!is_pontuation(str[reader])) {
+        if (!is_ponctuation(str[reader])) {
             str[writer] = str[reader];
             writer++;
         }
@@ -75,9 +75,11 @@ int char_diff_tolerance(const char *s1, const char *s2) {
  * Função responsável por contar quantas ocorrências da
  * palavra tem num arquivo
  */
-int count_ocurences(const char target[], FILE *file, const int tolerance) {
+int count_ocurences(char target[], FILE *file, const int tolerance) {
     int count = 0;
     char word[BUFFER_SIZE];
+
+    clean_string(target);
 
     while (fscanf(file, "%1023s", word) == 1) {
         // Limpa a string de pontuações
@@ -130,7 +132,7 @@ void run() {
     }
     printf("tolerance: %d\n", tolerance);
 
-    // Print nescessário do analizando arquivos
+    // Print necessário do analisando arquivos
     printf("Analizando arquivos... \n");
     printf("\n");
 
